@@ -5,11 +5,14 @@ class baseclass{
   public $args;
   public $filecss;
   public $filejs;
+  
+
   public function __construct(){
     $themename = $this->themename;
     add_action('after_setup_theme',array($this,'themes_setup'));
     add_action('wp_enqueue_script',array($this,'theme_scripts'));
-     
+     add_action( 'widgets_init', array($this,'add_widget') );
+
   }
  
   public function themes_setup($themename){
@@ -62,6 +65,46 @@ class baseclass{
       $this->addjs();
   }
   
+ 
+  public function add_widget($widget){
+      register_sidebar($widget);
+  }
+  public function custom_post_type(){
+      $this->add_post_type();
+  }
+ 
+  
+  
+}
+
+//Class to make post type
+class oo_post_type{
+    public $singular;
+    public $plural;
+    public $name;
+    public $menu_icon;
+    public function __construct($name,$plural,$singular,$menu_icon){
+        $this->name=$name;
+        $this->plural=$plural;
+        $this->singular=$singular;
+        $this->menu_icon=$menu_icon;
+        add_action( 'init', array($this,'post_type_function') );
+         
+    }
+    function post_type_function() {
+    register_post_type( $this->name,
+    array(
+      'labels' => array(
+        'name' => __( $this->plural ),
+        'singular_name' => __( $this->singular )
+      ),
+      'public' => true,
+      'has_archive' => true,
+      'menu_icon'=> $this->menu_icon,
+      'supports' => array( 'title', 'editor', 'author', 'thumbnail' )
+    )
+  );
+}
   
 }
 
