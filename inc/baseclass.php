@@ -2,9 +2,9 @@
 
 class baseclass{
   public $themename;
-  public function __construct($themename){
-    $this->themename=$themename;
-    add_action('after_setup_theme',array('this',theme_setup));
+  public function __construct(){
+    $themename=$this->themename;
+    add_action('after_setup_theme',array($this,'theme_setup'));
   }
   public function themes_setup($themename){
     /*
@@ -33,7 +33,7 @@ class baseclass{
     */
     add_theme_support( 'post-thumbnails' );
   }
-  
+
 }
 
 
